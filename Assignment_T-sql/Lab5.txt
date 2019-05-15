@@ -1,0 +1,58 @@
+--Challenge1
+
+
+SELECT ProductID,UPPER(Name) AS ProductName,ROUND(Weight) AS ApproxWeight
+FROM SalesLT.Product;
+
+
+SELECT ProductID,UPPER(Name) AS ProductName,ROUND(Weight) AS ApproxWeight,
+YEAR(SellStartDate) SellStartYear, DATENAME(mm,SellStartDate) SellStartMonth
+FROM SalesLT.Product;
+
+
+SELECT ProductID,UPPER(Name) AS ProductName,ROUND(Weight) AS ApproxWeight,
+YEAR(SellStartDate) SellStartYear, DATENAME(mm,SellStartDate) SellStartMonth,LEFT(ProductNumber, 2) AS ProductType
+FROM SalesLT.Product;
+
+
+SELECT ProductID,UPPER(Name) AS ProductName,ROUND(Weight) AS ApproxWeight,
+YEAR(SellStartDate) SellStartYear, DATENAME(mm,SellStartDate) SellStartMonth,LEFT(ProductNumber, 2) AS ProductType
+FROM SalesLT.Product
+WHERE ISNUMERIC(Size) = 1;
+
+
+
+--Challenge2
+
+
+SELECT a.CompanyName, RANK() OVER(ORDER BY b.TotalDue DESC) AS RankbyTotalDue
+FROM SalesLT.SalesOrderHeader AS b JOIN SalesLT.Customer AS a ON a.CustomerID = b.CustomerID
+ORDER BY RankbyTotalDue;
+
+
+
+--Challenge3
+
+
+
+SELECT SUM(a.LineTotal) AS TotalRevenue,b.Name
+FROM SalesLT.SalesOrderDetail AS a JOIN SalesLT.Product AS b 
+ON a.ProductID = b.ProductID
+GROUP BY b.Name
+ORDER BY TotalRevenue;
+
+
+SELECT SUM(a.LineTotal) AS TotalRevenue,b.Name
+FROM SalesLT.SalesOrderDetail AS a JOIN SalesLT.Product AS b 
+ON a.ProductID = b.ProductID
+WHERE b.ListPrice > 1000
+GROUP BY b.Name
+ORDER BY TotalRevenue;
+
+
+SELECT SUM(a.LineTotal) AS TotalRevenue,b.Name
+FROM SalesLT.SalesOrderDetail AS a JOIN SalesLT.Product AS b 
+ON a.ProductID = b.ProductID
+GROUP BY b.Name
+HAVING TotalRevenue > 20000
+ORDER BY TotalRevenue;

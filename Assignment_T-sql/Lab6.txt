@@ -1,0 +1,43 @@
+---Challenge1
+
+
+SELECT p.ProductID,p.Name,p.ListPrice
+FROM SalesLT.Product AS p
+WHERE p.ListPrice >
+ (SELECT AVG(UnitPrice)
+  FROM SalesLT.SalesOrderDetail) ;
+
+
+SELECT p.ProductID,p.Name,p.ListPrice
+FROM SalesLT.Product AS p
+WHERE p.ListPrice > 100 AND p.ProducID IN
+ (SELECT DISTINCT a.ProductID
+  FROM SalesLT.SalesOrderDetail AS a,p
+  WHERE a.ProductID=p.ProductID AND a.UnitPrice<100) ;
+
+
+SELECT p.ProductID,p.Name,P.StandardCost,p.ListPrice,AVG(a.UnitPrice) as AverageUnitPrice
+FROM SalesLT.Product As p JOIN SalesLT.SalesOrderDetail as a ON p.ProductID=a.ProductID
+GROUP BY p.ProductID;
+
+
+SELECT p.ProductID,p.Name,p.StandardCost,p.ListPrice,AVG(a.UnitPrice) as AverageUnitPrice
+FROM SalesLT.Product As p JOIN SalesLT.SalesOrderDetail as a ON p.ProductID=a.ProductID
+GROUP BY p.ProductID
+HAVING AverageUnitPrice<p.StandardCost;
+
+
+
+---Challenge 2
+
+
+SELECT b.SalesOrderID,a.CustomerID,a.firstName,a.lastName,b.TotalDue
+FROM SalesLT.SalesOrderHeader AS b CROSS APPLY dbo.ufnGetCustomerInformation(b.CustomerID) AS a
+WHERE a.CustomerID=b.CustomerID ;
+
+
+SELECT a.CustomerID,a.firstName,a.lastName,b.AddressLine,b.City
+FROM SalesLT.CustomerAddress as c JOIN SalesLT.Address as b ON c.AddressID = b.AddressID CROSS APPLY dbo.ufnGetCustomerInformation(c.CustomerID) AS a
+WHERE a.CustomerID = c.CustomerID;
+
+

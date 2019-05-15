@@ -1,0 +1,84 @@
+--Challlenge 1
+
+
+CREATE PROCEDURE SAlesLT.INSERTSALESORDER (@OrderDt DATE = NULL,@DueDt DATE,@CustID =NULLINT)
+AS
+IF @OrderDt IS NULL OR @DueDt IS NULL OR @CustId IS NULL
+	PRINT 'ENTER VAlid Entries';
+ELSE
+DECLARE @ID INT;
+SELECT @ID=NEXT VALUE FOR SAlesLT.SalesorderNumber;
+INSERT INTO SalesLT.SalesOrderHeader(SalesOrderID,OrderDate,DueDate,CustomerID,ShippingMethod)
+Values (@ID,@OrderDt,DueDt,@CustID,'CARGO TRANSPORT 5');
+PRINT @ID;
+
+GO
+
+
+CREATE PROCEDURE SalesLT.InsertSales (@SaleID INT,@ProdID INT,@Quant INT,@Unit REAL) 
+AS
+IF @SaleID IN (SELECT DISTINCT SalesOrderID FROM SalesLT.SalesOrderHeader)
+	PRINT 'SalesID Doesnot Exist';
+ELSE
+	INSERT INTO SalesLT.SalesOrderDetatil(SalesOrderId,ProductID,Quantity,UnitPrice) VALUES(@SaleID,@ProdId,@Quant,@Unit)
+	PRINT 'Record Inserted';
+
+GO
+
+
+
+---Challenge 2
+
+
+CREATE PROCEDURE Calculation
+AS	
+(
+CREATE TABLE #TBL (ParentCategory Varcahar(30),AVERAGEPRICE REAL)
+
+INSERT INTO #TBL
+SELECT b.ParentProductCategory AS ParentCategory,AVG(LISTPRICE) AS AVERAGEPRICE
+FROM SalesLT.Product AS a,SalesLT.v.GetAllCategries AS b
+WHERE a.ProductCAtegoryID = b.ProductCategoryID
+GROUP BY  GROUPNG SETS(b.ParentProductCategory,())
+);
+
+GO
+
+DECLARE @MAXACEPTABLE INT = 10000,@AVGLIST INT,@MARAVG INT,@MAXSEll INT;
+
+EXEC Calculation
+
+SELECT @AVGLIST = AVERAGEPRICE
+FROM #TBL
+WHERE #TBL.ParentCategory = 'Bikes';
+
+SELECT @MARAVG = AVERAGEPRICE
+FROM #TBL
+WHERE #TBL.ParentCategory IS NULL;
+
+WHILE @AVGLIST<@MARAVG
+BEGIN
+	UPDATE SalesLT.Product AS d
+	SET ListPrice = ListPrie*1.1
+	FROM SalesLT.vGetallCategories AS c
+	WHERE c.ProductCategoryID = c.ProductCategoryID AND 				c.PArentProductCategory = 'Bikes';
+	
+	EXEC Calculation 
+
+	SELECT @AVGLIST = AVERAGEPRICE
+	FROM #TBL
+	WHERE #TBL.ParentCategory = 'Bikes';
+
+	SELECT @MARAVG = AVERAGEPRICE
+	FROM #TBL
+	WHERE #TBL.ParentCategory IS NULL;
+	
+	SELECT @MAXSEll = MAX(ListPrice)
+	FROM SalesLT.Product AS d,SalesLT.vGetallCategories AS c
+	WHERE c.ProductCategoryID = d.ProductCategoryID AND 				c.PArentProductCategory = 'Bikes';
+
+	IF @MAXSEll >= @MAXACEPTABLE
+		BREAK;
+
+	DROP TABLE #TBL;
+END;

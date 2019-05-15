@@ -1,0 +1,30 @@
+--- Challenge 1
+
+SELECT * FROM SalesLT.Customers;
+
+SELECT FirstName + ',' + ISNULL(MiddleName,'') + ',' + LastName + ',' + ISNULL(Suffix,'')
+FROM SalesLT.Customers;
+
+SELECT SalesPerson,NameStyle + ' ' + FirstName as CustomerName,Phone
+FROM SalesLT.Customers;
+
+
+--- Challenge 2
+
+SELECT CustomerID + ':' + CompanyName 
+FROM SalesLT.Customers;
+
+SELECT m.SalesOrderID + '(' + m.RevisionNumber + ')' as OrderNumber,CAST(m.OrderDate AS date) as OrderDate
+FROM SalesLT.SalesOrderHeader as m JOIN SalesLT.Customers as c ON m.CustomerID= c.CustomerID;
+
+
+--- Challenge 3
+
+SELECT FirstName + ',' + ISNULL(MiddleName,'') + ',' + LastName AS ContactName
+FROM SalesLT.Customers;
+
+SELECT CustomerID, COALESCE(EmailAddress,Phone) AS PrimaryContact
+FROM SalesLT.Cutomers;
+
+SELECT SalesOrderID,OrderDate, CASE WHEN ShipDate ISNULL THEN 'Awaiting Shipment' ELSE 'Shippped' END AS ShippingStatus
+FROM SalesLT.SalesOrderHeader;

@@ -1,0 +1,50 @@
+--- Challenge 1
+
+
+SELECT a.CompanyName,b.AddressLine1,CAST(c.AddressType = 'Billing',varchar(30))
+FROM SalesLT.Customer AS a,SalesLT.Address AS b,SalesLT.CustomerAddress AS c
+WHERE a.CustomerID=c.CustomerID AND b.AddressID=c.AddressID 
+AND AddressType = 'Main Office' ;
+
+
+SELECT a.CompanyName,b.AddressLine1,CAST(c.AddressType = 'Shipping',varchar(30))
+FROM SalesLT.Customer AS a,SalesLT.Address AS b,SalesLT.CustomerAddress AS c
+WHERE a.CustomerID=c.CustomerID AND b.AddressID=c.AddressID 
+AND AddressType = 'Shipping' ;
+
+
+SELECT *
+FROM (
+SELECT a.CompanyName,b.AddressLine1,CAST(c.AddressType = 'Billing',varchar(30))
+FROM SalesLT.Customer AS a,SalesLT.Address AS b,SalesLT.CustomerAddress AS c
+WHERE a.CustomerID=c.CustomerID AND b.AddressID=c.AddressID 
+AND AddressType = 'Main Office'
+UNION
+SELECT a.CompanyName,b.AddressLine1,CAST(c.AddressType = 'Shipping',varchar(30))
+FROM SalesLT.Customer AS a,SalesLT.Address AS b,SalesLT.CustomerAddress AS c
+WHERE a.CustomerID=c.CustomerID AND b.AddressID=c.AddressID 
+AND AddressType = 'Shipping' )
+ORDER BY CompanyName,AddressType ;
+
+
+
+---Challenge 2
+
+
+SELECT a.CompanyName
+FROM SalesLT.Customer AS a,SalesLT.CustomerAddress AS c
+WHERE a.CustomerID=c.CustomerID AND AddressType = 'Main Office'
+EXCEPT
+SELECT a.CompanyName
+FROM SalesLT.Customer AS a,SalesLT.CustomerAddress AS c
+WHERE a.CustomerID=c.CustomerID AND AddressType = 'Shipping' ;
+
+
+
+SELECT a.CompanyName
+FROM SalesLT.Customer AS a,SalesLT.CustomerAddress AS c
+WHERE a.CustomerID=c.CustomerID AND AddressType = 'Main Office'
+INTERSECT
+SELECT a.CompanyName
+FROM SalesLT.Customer AS a,SalesLT.CustomerAddress AS c
+WHERE a.CustomerID=c.CustomerID AND AddressType = 'Shipping' ;

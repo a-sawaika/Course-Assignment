@@ -1,0 +1,36 @@
+--- chalenge1
+
+
+SELECT a.ProductID,a.Name AS ProductName,b.Name AS ModelName,b.CatalogDescription
+FROM SalesLT.Product AS a JOIN SalesLT.vProductModelCatalogDescription AS b
+ON a.ProductModelID = b.ProductModelID;
+
+
+DECLARE @TableColor AS TABLE (Color VARCHAR(10));
+INSERT INTO @TableColor
+SELECT DISTINCT Color FROM SalesLT.Product;
+
+SELECT ProductID,Name,Color
+FROM SalesLT.Product
+WHERE Color IN @TableColor;
+
+
+SELECT ProductID,ParentCategory,Category
+FROM SalesLT.Product CROSS JOIN dbo.ufnGetAllCategories(ProductCategoryID);
+
+
+
+--Challenge2
+
+
+WITH CustomerRevenue (CustomerID , Revenue)
+AS(
+SELECT CustomerID,ISNULL(SUM(TotalDue),0) As Revenue
+(SELECT CustomerID,TotalDue
+FROM SalesLT.SalesOrderHeader) AS SalesDetail
+GROUP BY CustomerID
+)
+
+SELECT CompanyName + '(' + SalesPerson + ')' As ContactName,Revenue
+FROM SalesLT.Customer AS a, CustomerRevenue AS b
+WHERE a.CustomerID=b.CustomerID

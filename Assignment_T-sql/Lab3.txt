@@ -1,0 +1,35 @@
+--- Challenge 1
+
+SELECT m.SalesOrderID,m.TotalDue,c.CompanyName
+FROM SalesLT.SalesOrderHeader AS m JOIN SalesLT.Customer AS c 
+ON m.CustomerID = c.CustomerID;
+
+SELECT m.SalesOrderID,m.TotalDue,c.CompanyName,a.AddressLine1,a.AddressLine2,a.City,a.StateProvince,a.PostalCode,a.CountryRegion
+FROM SalesLT.SalesOrderHeader AS m JOIN SalesLT.Customer AS c 
+ON m.CustomerID = c.CustomerID INNER JOIN SalesLT.CustomerAddress AS d ON d.CustomerID = c.CustomerID INNER JOIN SalesLT.Address AS a ON a.AddressID = d.AddressID
+WHERE d.AddressType = 'MainOffice';
+
+
+--- Challenge 2
+
+SELECT c.FirstName + c.LastName AS ContactNames,m.SalesOrderID,m.TotalDue
+FROM SalesLT.Customer AS c LEFT OUTER JOIN SalesLT.SalesOrderHeader AS m ON m.CustomerID = c.CustomerID
+ORDER BY m.SalesOrderID DESC;
+
+SELECT c.CustomerID,c.CompanyName,c.FirstName + c.LastName AS ContactNames,c.Phone
+FROM SalesLT.Customer AS c LEFT OUTER JOIN SalesLT.CustomerAddress AS a
+ON c.CustomerID = a.CustomerID
+WHERE a.AddressID IS NULL;
+
+
+SELECT *
+FROM 
+SELECT c.CustomerID as CustomerID
+FROM SalesLT.Customer AS v LEFT OUTER JOIN SalesLT.SalesOrderHeader AS m ON m.CustomerID = c.CustomerID
+WHERE m.SalesOdrerID IS NULL
+AS a
+FULL OUTER JOIN
+SELECT p.ProductID as ProductID
+FROM SalesLT.Products AS p LEFT OUTER JOIN SalesLT.SalesOrderDetail AS s ON p.ProductID = s.ProductID
+WHERE s.SalesOrderID IS NULL
+AS b

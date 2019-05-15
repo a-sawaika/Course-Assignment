@@ -1,0 +1,53 @@
+--Challenge1
+
+
+INSERT INTO SalesLT.Product (Name,PrductNumber,Standardcost,ListPrice,ProductCtegryId,SellDate)
+VALUES ('LED Lights','LT_l123',2.56,12.99,37,GETDATE());
+
+SELECT IDENT_CURRENT(SalesLT.Product) AS now;
+
+
+SELECT * FORM SalesLT.Product WHERE ProductID=now;
+
+
+SET IDENTITY_INSERT SalesLT.ProductCategory ON;
+
+INSERT INTO SalesLT.ProductCategory VALUES
+(51,4,'Bells and HOrns');
+
+INSERT INTO SalesLT.Product (Name,PrductNumber,Standardcost,ListPrice,ProductCtegryId,SellDate)
+Values(''Bicycle Bell','BB_RING'2.47,4.99,51,GETDATE());
+
+SELECT * FROM SalesLT.Product;
+SELECT * FROM SalesLT.ProductCategory;
+
+
+
+--Challenge2
+
+
+UPDATE SalesLT.Product
+SET ListPrice = ListPrice*1.1
+WHERE ProductCategoryID = 51;
+
+
+UPDATE SalesLT.Product
+SET DiscontinuedDate = GETDATE()
+WHERE ProductcategoryID = 37 AND Name NOT LIKE 'LED Lights';
+
+
+
+--challenge3
+
+
+DELETE FROM SalesLT.Product
+WHERE ProductCAtegoryID = 51;
+
+DELETE FROM SalesLT.ProductCategory
+WHERE ProductCategoryID = 51 AND ParentProductCategoryID=4;
+
+
+
+
+
+

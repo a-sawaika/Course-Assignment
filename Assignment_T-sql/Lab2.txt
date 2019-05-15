@@ -1,0 +1,32 @@
+--- Challenge 1
+
+SELECT DISTINCT City,StateProvince
+FROM SalesLT.Address;
+
+SELECT TOP 10 PERCENT Name
+FROM SalesLT.Product
+ORDER BY Weight DESC;
+
+SELECT Name
+FROM SalesLT.Product
+ORDER BY Weight DESC OFFSET 10 ROWS FETCH FIRST 100 ROWS ONLY;
+
+
+--- Challenge 2
+
+SELECT Name,Color,Size
+FROM SalesLT.Product
+WHERE ProductModelID=1;
+
+SELECT ProductNumber,Name
+FROM SalesLT.Product
+WHERE Color IN ('back','red','white) AND size IN('S','M');
+
+SELECT ProductNumber,Name,Price
+FROM SalesLT.Product
+WHERE ProductNumber LIKE 'BK-%';
+
+SELECT ProductNumber,Name,Price
+FROM SalesLT.Product
+WHERE ProductNumber LIKE 'BK-[0-9,A-Q,S-X]_-[0-9][0-9]';
+
